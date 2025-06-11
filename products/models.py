@@ -9,15 +9,16 @@ class Product(models.Model):
     last_checked = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        # Ensure 'name' is treated as a string. If it's an empty string or None,
-        # fallback to 'url'. If 'url' is also potentially None (though unique=True
-        # implies it must be set for saved objects), convert it to string.
-        # Finally, provide a robust fallback if both name and url are unusable.
-        if self.name:
-            return str(self.name) # Ensure it's a string, even if it was None accidentally
-        elif self.url:
-            return str(self.url) # Ensure it's a string
-        return f"Product ID: {self.pk or 'N/A'}" # Fallback for unsaved or truly empty cases
+       
+        name_val = self.name
+        url_val = self.url
+        print(f"DEBUG Product __str__: PK={self.pk!r}, name={name_val!r} (type={type(name_val)}), url={url_val!r} (type={type(url_val)})")
+
+        if name_val is not None and name_val != "": 
+            return str(name_val)
+        elif url_val is not None and url_val != "":
+            return str(url_val)
+        return f"Product ID: {self.pk or 'N/A'}" 
 
 
 class PriceHistory(models.Model):
@@ -26,23 +27,34 @@ class PriceHistory(models.Model):
     checked_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        # DEBUG: Print values and their types before concatenation
+        product_obj = self.product
+        price_val = self.price
+        checked_at_val = self.checked_at
+        
+        print(f"DEBUG PriceHistory __str__: PK={self.pk!r}, product_obj={product_obj!r} (type={type(product_obj)}), price={price_val!r} (type={type(price_val)}), checked_at={checked_at_val!r} (type={type(checked_at_val)})")
+
       
         product_info = "N/A Product"
-        if self.product: 
-            if self.product.name:
-                product_info = str(self.product.name)
-            elif self.product.url: # If name is empty or None, try URL
-                product_info = str(self.product.url)
+        if product_obj: # Check if product object exists
+            product_name_val = product_obj.name
+            product_url_val = product_obj.url
+            print(f"DEBUG PriceHistory __str__ (nested product): product_name={product_name_val!r} (type={type(product_name_val)}), product_url={product_url_val!r} (type={type(product_url_val)})")
+            
+            if product_name_val is not None and product_name_val != "":
+                product_info = str(product_name_val)
+            elif product_url_val is not None and product_url_val != "":
+                product_info = str(product_url_val)
 
        
         checked_at_str = "N/A Date"
-        if self.checked_at:
+        if checked_at_val:
             try:
-                checked_at_str = self.checked_at.strftime('%Y-%m-%d %H:%M')
+                checked_at_str = checked_at_val.strftime('%Y-%m-%d %H:%M')
             except AttributeError:
                
                 checked_at_str = "Invalid Date Format"
 
        
-        return f"{product_info} - ${self.price} at {checked_at_str}"
+        return f"{product_info} - ${price_val} at {checked_at_str}"
 
