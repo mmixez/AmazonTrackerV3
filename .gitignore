@@ -1,0 +1,7 @@
+.env
+local_settings.py
+venv/
+env/
+.venv/
+.env/
+.pytest_cache/

@@ -1,0 +1,340 @@
+/*=== Base === */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f8f9fa;
+  font-family: "Roboto";
+}
+
+main {
+  flex: 1;
+}
+
+h1 {
+  color: #343a40;
+  font-size: 36px;
+  letter-spacing: -0.5px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* === Layout === */
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.centered-container.column {
+  flex-direction: column;
+  text-align: center;
+}
+
+#checkPricesContainer {
+  gap: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* === MESSAGES STYLING === */
+ul.messages {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+  text-align: center; /* Centers the text inside the ul */
+  opacity: 1; /* Ensures it starts fully visible */
+  transition: opacity 1s ease-out, visibility 1s ease-out; /* Smooth transition for opacity AND visibility */
+  display: flex; /* Helps center the ul itself if it's not full width */
+  justify-content: center; /* Horizontally centers the ul */
+  align-items: center; /* Vertically centers the ul's content if needed */
+  flex-direction: column; /* Stacks list items vertically */
+}
+
+ul.messages li {
+  background-color: #e0ffe0;
+  color: #2d7a2d;
+  border: 1px solid #b2d8b2;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  max-width: fit-content; /* Make the background only as wide as the text */
+  margin: 5px auto; /* Centers individual list items */
+}
+
+ul.messages.fade-out {
+  opacity: 0;
+  visibility: hidden; /* This hides it completely and removes it from tab order */
+}
+/* === END MESSAGES STYLING === */
+
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+/* === Spinner === */
+.spinner-container {
+  visibility: hidden;
+  margin-left: 10px;
+}
+
+.spinner-container.visible {
+  visibility: visible;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #09f;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === Form Styling === */
+form {
+  text-align: left;
+}
+
+form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+form input[type="url"],
+form input[type="number"] {
+  width: 600px;
+  padding: 8px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 8px; /* 🔸 round edge */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 🔸 subtle inner shadow */
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* === Buttons === */
+button {
+  padding: 10px 18px;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* Submit Button */
+form button[type="submit"] {
+  background-color: #137ae1;
+  color: white;
+  margin-top: 10px;
+}
+
+form button[type="submit"]:hover {
+  background-color: #a8b5e0;
+}
+
+/* Check Prices Now Button */
+#checkPricesBtn {
+  background-color: #ff9900;
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+#checkPricesBtn:hover {
+  background-color: #e68a00;
+}
+
+/* History & Delete Buttons */
+button.show-history {
+  background-color: #ff9900;
+  color: white;
+}
+
+button.show-history:hover {
+  background-color: #e68a00;
+}
+
+button.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+button.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Inline form (delete) */
+.inline-form {
+  display: inline;
+}
+
+/* === Modal === */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 700px;
+  width: 90%;
+  position: relative;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* === Product Cards === */
+.products-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 0 20px;
+  padding-bottom: 40px;
+}
+
+.product-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px 24px;
+  width: 280px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: transform 0.2s ease;
+  min-height: 300px;
+}
+
+.card-header {
+  margin-bottom: auto;
+}
+
+.card-body {
+  margin-top: auto;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.product-card h2 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  /* === THIS IS YOUR PRODUCT NAME COLOR === */
+  color: #304674; /* A distinct, standard blue for testing. You can change this later. */
+  /* === END PRODUCT NAME COLOR === */
+}
+
+.product-card p {
+  margin: 0;
+  font-size: 18px;
+  color: #555; /* Other text in the card (price, target price) will be a medium gray */
+}
+
+.product-card button,
+.product-card form button {
+  align-self: flex-start;
+  padding: 8px 14px;
+  font-size: 14px;
+  margin-top: 6px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product-card button:hover,
+.product-card form button:hover {
+  opacity: 0.9;
+}
+
+.product-card form button {
+  background-color: #f44336;
+  color: white;
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+  form input[type="url"],
+  form input[type="number"] {
+    width: 100%;
+  }
+
+  .products-container {
+    padding: 0 10px;
+  }
+}
+.product-card {
+  width: 280px; /* your current fixed width */
+  /* optionally: */
+  flex: 1 1 280px; /* allow cards to shrink and grow, min 280px */
+  max-width: 320px;
+}
+
+/* Tablet: 2 cards per row */
+@media (max-width: 900px) {
+  .product-card {
+    flex: 1 1 45%; /* about 2 per row */
+    max-width: none;
+  }
+}
+
+/* Mobile: 1 card per row */
+@media (max-width: 600px) {
+  .product-card {
+    flex: 1 1 100%; /* full width */
+  }
+}
+.products-container {
+  padding-bottom: 80px; /* Or more if needed */
+}
+
+.products-container {
+  overflow: hidden; /* Prevents floating issues */
+}

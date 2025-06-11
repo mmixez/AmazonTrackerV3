@@ -1,0 +1,221 @@
+{% load tz %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8" />
+  <title>My Product Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'products/styles.css' %}" />
+</head>
+  <body>
+    <h1>Tracked Products</h1>
+    <br>
+    <div class="centered-container">
+      <div id="checkPricesContainer">
+        <button id="checkPricesBtn">Check Prices Now</button>
+        <span id="checkPricesStatus"></span>
+        <div id="loadingSpinner" class="spinner-container">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+    
+    {% if messages %}
+    <ul class="messages" id="django-messages"> {# Confirmed ID: django-messages #}
+      {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="form-wrapper">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Product</button>
+      </form>
+    </div>
+      <br>
+      <br>
+    <div class="products-container">
+     {% for product in products %}
+<div class="product-card" onclick="window.open('{{ product.url }}', '_blank')">
+  <div class="card-header">
+    <h2>{{ product.name }}</h2>
+  </div>
+
+  <div class="card-body">
+    <p><strong>Price:</strong> ${{ product.last_price }}</p>
+    <p><strong>Target Price:</strong> ${{ product.target_price }}</p>
+    <p><strong>Last checked:</strong>
+      {% if product.last_checked %}
+        {{ product.last_checked|timezone:"America/Los_Angeles"|date:"M d, Y, P" }}
+      {% else %}
+        Not checked yet
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="card-actions">
+    <button class="show-history" onclick="event.stopPropagation(); openModal({{ product.id }}, '{{ product.name|escapejs }}')">
+      Show Price History
+    </button>
+
+    <form action="{% url 'delete_product' product.id %}" method="post" class="inline-form" onclick="event.stopPropagation();">
+      {% csrf_token %}
+      <button type="submit" onclick="return confirm('Are you sure you want to delete this product?');">
+        Delete
+      </button>
+    </form>
+  </div>
+</div>
+{% endfor %}
+
+      
+    </div>
+    <div style="height: 100px;"></div>
+
+
+
+
+
+
+
+    <div id="priceHistoryModal" class="modal">
+      <div class="modal-content">
+        <button onclick="closeModal()" class="modal-close-btn">&times;</button>
+        <h3 id="modalProductName">Price History</h3>
+        <div id="modalChartWrapper">
+          <canvas id="modalChart" width="600" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const productsHistory = {{ products_history|safe }};
+      console.log('Products History:', productsHistory);
+
+      let modalChart = null;
+
+      function openModal(productId, productName) {
+        const modal = document.getElementById('priceHistoryModal');
+        const titleElem = document.getElementById('modalProductName');
+
+        titleElem.textContent = productName + " - Price History";
+
+        const productData = productsHistory.find(p => p.id === productId);
+        if (!productData) {
+          alert("No price history available.");
+          return;
+        }
+
+        modal.style.display = "flex";
+
+        if (modalChart) {
+          modalChart.destroy();
+          const oldCanvas = document.getElementById('modalChart');
+          oldCanvas.remove();
+          const newCanvas = document.createElement('canvas');
+          newCanvas.id = 'modalChart';
+          newCanvas.width = 600;
+          newCanvas.height = 300;
+          document.getElementById('modalChartWrapper').appendChild(newCanvas);
+        }
+
+        const ctx = document.getElementById('modalChart').getContext('2d');
+        const minPrice = Math.min(...productData.price_values);
+        const maxPrice = Math.max(...productData.price_values);
+
+        modalChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: productData.price_dates,
+            datasets: [{
+              label: 'Price Over Time',
+              data: productData.price_values,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              fill: false,
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                title: { display: true, text: 'Date Checked' }
+              },
+              y: {
+                title: { display: true, text: 'Price ($)' },
+                beginAtZero: false,
+                min: minPrice * 0.9,
+                max: maxPrice * 1.1
+              }
+            }
+          }
+        });
+      }
+
+      function closeModal() {
+        document.getElementById('priceHistoryModal').style.display = "none";
+      }
+
+      window.onclick = function(event) {
+        const modal = document.getElementById('priceHistoryModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+      }
+
+      document.getElementById('checkPricesBtn').addEventListener('click', function() {
+        const statusElem = document.getElementById('checkPricesStatus');
+        const spinner = document.getElementById('loadingSpinner');
+        
+        statusElem.textContent = 'Checking prices... Please wait.';
+        spinner.classList.add('visible');
+
+        fetch("{% url 'run_price_check' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not OK');
+          return response.json();
+        })
+        .then(data => {
+          statusElem.textContent = data.message || 'Price check complete!';
+          spinner.classList.remove('visible');
+          setTimeout(() => location.reload(), 2000);
+        })
+        .catch(error => {
+          statusElem.textContent = 'Error running price check.';
+          spinner.classList.remove('visible');
+          console.error('Error:', error);
+        });
+      });
+
+
+      // for disappearing messages 
+      const messageContainer = document.getElementById('django-messages'); // THIS MATCHES THE HTML ID
+
+      if (messageContainer) {
+        // After 3 seconds, add the fade-out class to start the transition
+        setTimeout(() => {
+          messageContainer.classList.add('fade-out');
+        }, 3000); // Message will start fading out after 3 seconds
+
+        // After the fade-out transition completes (1 second in CSS), remove the element from the DOM
+        // Total time before removal: 3 seconds (delay) + 1 second (transition) = 4 seconds
+        setTimeout(() => {
+          messageContainer.remove(); 
+        }, 4000); 
+      }
+      // === End New JavaScript for disappearing messages ===
+
+    </script>
+  </body>
+</html>
