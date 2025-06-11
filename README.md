@@ -23,17 +23,17 @@ AmazonTrackerV3 is a Django-based web application that allows users to track the
 
 🛠 Tech Stack
 
-Frontend: Django Templates (HTML), CSS for styling (custom + Google Fonts), JavaScript for interactivity (including Chart.js for price history charts)
+-Frontend: Django Templates (HTML), CSS for styling (custom + Google Fonts), JavaScript for interactivity (including Chart.js for price history charts)
 
-Backend: Django (Python)
+-Backend: Django (Python)
 
-Database: PostgreSQL
+-Database: PostgreSQL
 
-Testing: pytest, manual Excel test plan
+-Testing: pytest, manual Excel test plan
 
-CI/CD: GitHub Actions
+-CI/CD: GitHub Actions
 
-Email Alerts: SMTP-based email notifications
+-Email Alerts: SMTP-based email notifications
 
 
 ![image](https://github.com/user-attachments/assets/694fc3fb-139e-4d8c-a734-1af990b7eb68)
