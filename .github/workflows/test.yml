@@ -8,7 +8,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:13
+        image: postgres:14 
         env:
           POSTGRES_DB: amazontracker_db
           POSTGRES_USER: postgres
@@ -20,7 +20,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
-        
 
     env:
       DB_NAME: amazontracker_db
