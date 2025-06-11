@@ -22,7 +22,8 @@ jobs:
           --health-retries 5
 
     env:
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/amazontracker_db
+      # Changed localhost to 127.0.0.1 to explicitly force TCP/IP connection for psycopg2
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/amazontracker_db
       DJANGO_SETTINGS_MODULE: tracker_backend.settings
       PYTHONUNBUFFERED: 1
 
@@ -44,6 +45,11 @@ jobs:
 
       - name: Run tests
         run: |
+          # Add a small delay to ensure PostgreSQL service is fully ready,
+          # despite health checks. This is a common workaround.
+          echo "Waiting for PostgreSQL to be ready..."
+          sleep 5
+
           python manage.py makemigrations --check --dry-run || true
           python manage.py migrate --noinput
           pytest
