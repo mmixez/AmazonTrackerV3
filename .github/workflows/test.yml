@@ -19,12 +19,17 @@ jobs:
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
-          --health-retries 10 # Increased retries to give the DB more time
-        command: postgres -c listen_addresses='*' 
+          --health-retries 10
+        command: postgres -c listen_addresses='*'
 
     env:
-    
-      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/amazontracker_db
+     
+      DB_NAME: amazontracker_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+
       DJANGO_SETTINGS_MODULE: tracker_backend.settings
       PYTHONUNBUFFERED: 1
 
@@ -46,8 +51,6 @@ jobs:
 
       - name: Run tests
         run: |
-          # Add a small delay to ensure PostgreSQL service is fully ready,
-          # despite health checks. This is a common workaround.
           echo "Waiting for PostgreSQL to be ready..."
           sleep 5
 
