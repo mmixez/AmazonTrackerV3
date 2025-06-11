@@ -1,4 +1,7 @@
+# products/models.py
+
 from django.db import models
+from django.utils import timezone # Import timezone for potential future use or clarity
 
 class Product(models.Model):
     name = models.CharField(max_length=255, blank=True)
@@ -8,7 +11,13 @@ class Product(models.Model):
     last_checked = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return self.name or self.url
+       
+        if self.name:
+            return str(self.name)
+        elif self.url:
+            return str(self.url)
+       
+        return f"Product ID: {self.pk}"
 
 
 class PriceHistory(models.Model):
@@ -17,5 +26,18 @@ class PriceHistory(models.Model):
     checked_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.product.name or self.product.url} - ${self.price} at {self.checked_at.strftime('%Y-%m-%d %H:%M')}"
+      
+        product_info = "N/A Product"
+        if self.product:
+            if self.product.name:
+                product_info = str(self.product.name)
+            elif self.product.url:
+                product_info = str(self.product.url)
 
+      
+        checked_at_str = "N/A Date"
+        if self.checked_at:
+            checked_at_str = self.checked_at.strftime('%Y-%m-%d %H:%M')
+
+    
+        return f"{product_info} - ${self.price} at {checked_at_str}"
