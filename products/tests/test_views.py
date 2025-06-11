@@ -29,7 +29,7 @@ def test_scrape_view_post_valid(client, mocker):
 
     product = Product.objects.get(url=data['url'])
     assert product.name == "Test Product"
-    assert product.target_price == 100.00
+    assert product.target_price == Decimal('100.00')
     assert product.last_price == Decimal('99.99')
     assert PriceHistory.objects.filter(product=product).exists()
 
@@ -51,7 +51,7 @@ def test_delete_product_existing(client):
     product = Product.objects.create(
         name="Delete Me",
         url="https://www.example.com/delete",
-        target_price=50.00
+        target_price=Decimal('50.00')
     )
     url = reverse('delete_product', args=[product.id])
     response = client.get(url)
@@ -71,14 +71,18 @@ def test_product_detail_existing(client):
         name="Detail Product",
         url="https://www.example.com/detail"
     )
-    PriceHistory.objects.create(product=product, price=75.00, checked_at=timezone.now())
+    PriceHistory.objects.create(
+        product=product,
+        price=Decimal('75.00'),
+        checked_at=timezone.now()
+    )
 
     url = reverse('product_detail', args=[product.id])
     response = client.get(url)
     assert response.status_code == 200
     data = response.json()
     assert data['id'] == product.id
-    assert 75.00 in data['price_values']
+    assert Decimal('75.00') in map(Decimal, data['price_values'])
 
 @pytest.mark.django_db
 def test_product_detail_nonexistent(client):
