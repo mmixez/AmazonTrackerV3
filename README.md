@@ -18,7 +18,7 @@ AmazonTrackerV3 is a Django-based web application that allows users to track the
 
 - 🧪 Automated testing using pytest (functional & integration)
 
-- 📝 Manual test cases documented in an [Excel file](https://docs.google.com/spreadsheets/d/1AdvVZNADk09dZT7Q2EcfnRz2wW7j-NOk/edit?usp=sharing&ouid=113456943017181847110&rtpof=true&sd=true) for comprehensive QA coverage
+- 📝 Manual test cases documented in an [Excel file](https://docs.google.com/spreadsheets/d/1AdvVZNADk09dZT7Q2EcfnRz2wW7j-NOk/edit?usp=sharing&ouid=113456943017181847110&rtpof=true&sd=true) for comprehensive QA coverage - (right-click to open in a new tab)
 
 
 🛠 **Tech Stack**
