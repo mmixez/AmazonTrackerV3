@@ -38,6 +38,6 @@ AmazonTrackerV3 is a Django-based web application that allows users to track the
 
 ![image](https://github.com/user-attachments/assets/694fc3fb-139e-4d8c-a734-1af990b7eb68)
 
-![image](https://github.com/user-attachments/assets/f0b6f9cc-cffe-4e26-a706-a94c75cb3243")
+<img width="1791" height="1123" alt="image" src="https://github.com/user-attachments/assets/0a77cd68-ed2f-4302-a915-a2fda5406952" />
 
 ![image](https://github.com/user-attachments/assets/fc8f634f-a167-4375-ba99-e7487e342bfc)
