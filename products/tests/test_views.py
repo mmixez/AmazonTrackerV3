@@ -5,21 +5,21 @@ from products.models import Product, PriceHistory
 from decimal import Decimal
 
 @pytest.mark.django_db
-def test_scrape_view_get(client):
-    url = reverse('scrape_view')
+def test_scrap_view_get(client):
+    url = reverse('scrap_view')
     response = client.get(url)
     assert response.status_code == 200
     assert 'form' in response.context
     assert 'products' in response.context
 
 @pytest.mark.django_db
-def test_scrape_view_post_valid(client, mocker):
+def test_scrap_view_post_valid(client, mocker):
     # Mock get_product_info to avoid real scraping
     mocker.patch('products.views.get_product_info', return_value=("Test Product", "$99.99", 99.99))
     # Mock send_price_alert to avoid sending emails
     mocker.patch('products.views.send_price_alert')
 
-    url = reverse('scrape_view')
+    url = reverse('scrap_view')
     data = {
         'url': 'https://www.example.com/product',
         'target_price': '100.00',
@@ -34,8 +34,8 @@ def test_scrape_view_post_valid(client, mocker):
     assert PriceHistory.objects.filter(product=product).exists()
 
 @pytest.mark.django_db
-def test_scrape_view_post_invalid(client):
-    url = reverse('scrape_view')
+def test_scrap_view_post_invalid(client):
+    url = reverse('scrap_view')
     data = {
         'url': '',  # empty URL invalid
         'target_price': '',

@@ -11,7 +11,7 @@ from zoneinfo import ZoneInfo
 from django.utils.timezone import localtime
 
 
-def scrape_view(request):
+def scrap_view(request):
     if request.method == 'POST':
         form = ProductURLForm(request.POST)
         if form.is_valid():
@@ -40,7 +40,7 @@ def scrape_view(request):
                 if price_float is not None and target_price and price_float <= target_price:
                     send_price_alert(title, url, price_float)
 
-            return redirect('scrape_view')
+            return redirect('scrap_view')
     else:
         form = ProductURLForm()
 
@@ -68,7 +68,7 @@ def scrape_view(request):
         'products_history': json.dumps(products_history),  # Safe for JS
     }
 
-    return render(request, 'products/scrape.html', context)
+    return render(request, 'products/scrap.html', context)
 
 
 def delete_product(request, product_id):
@@ -78,7 +78,7 @@ def delete_product(request, product_id):
         messages.success(request, "Product deleted successfully.")
     else:
         messages.warning(request, "Product not found.")
-    return redirect('scrape_view')
+    return redirect('scrap_view')
 
 
 def product_detail(request, product_id):
