@@ -11,7 +11,7 @@ jobs:
         image: postgres:14 
         env:
           POSTGRES_DB: amazontracker_db
-          POSTGRES_USER: postgres
+          POSTGRES_USER: younki
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
@@ -23,7 +23,7 @@ jobs:
 
     env:
       DB_NAME: amazontracker_db
-      DB_USER: postgres
+      DB_USER: younki
       DB_PASSWORD: postgres
       DB_HOST: 127.0.0.1
       DB_PORT: 5432
