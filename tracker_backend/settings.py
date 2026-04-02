@@ -74,14 +74,15 @@ WSGI_APPLICATION = 'tracker_backend.wsgi.application'
 #     }
 # }
 
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "amazontracker_db",  # your database name
-        "USER": "younki",            # the role you just used
-        "PASSWORD": "1111", # your actual password
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": os.environ.get("DB_NAME", "amazontracker_db"),
+        "USER": os.environ.get("DB_USER", "younki"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", "1111"),
+        "HOST": os.environ.get("DB_HOST", "localhost"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
 
