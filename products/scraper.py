@@ -77,5 +77,6 @@ def send_price_alert(title, url, price_float):
     body = f"The item you wanted is below your target price.\nCheck it out here: {url}"
     send_mail(subject, body)
 
-if __name__ == "__main__":
-    send_price_alert("TEST", "https://example.com", 9.99)
+# Testing alert function when Gmail authentication fails
+# if __name__ == "__main__":
+#     send_price_alert("TEST", "https://example.com", 9.99)
